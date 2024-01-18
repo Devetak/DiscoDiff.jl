@@ -42,15 +42,15 @@ We implement a differentiable version of the sign function, where the derivative
 For the Heaviside function:
 
 ```julia
-heaviside(x_value)
-heaviside(x_value, k_value)
+heaviside(1.0) == 1.0
+heaviside(1.0, k = 2.0) == 1.0
 ```
 
 For the sign function
 
 ```julia
-sign_diff(x_value)
-sign_diff(x_value, k_value)
+sign_diff(2.0) == 1.0
+sign_diff(2.0, k = 2.0)
 ```
 
 
