@@ -23,7 +23,7 @@ $$
 sign(x) = \begin{cases} 
 1 & \text{for } x > 0, \\
 0 & \text{for } x = 0, \\
--1 & text{for } x < 0.
+-1 & \text{for } x < 0.
 \end{cases}
 $$
 
