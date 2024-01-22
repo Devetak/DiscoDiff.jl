@@ -19,7 +19,8 @@ jobs:
             julia --project=docs/ -e 'using Pkg; Pkg.develop(path=pwd()); Pkg.add("Documenter"); Pkg.instantiate()'
       - name: Build and deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+
         run: |
           julia --project=docs/ docs/make.jl
           cp -r docs/build/* docs/
@@ -29,5 +30,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git add docs/
           git commit -m "Update documentation" -a || echo "No changes to commit"
-          git push
+          git push --force https://${{ secrets.MY_GITHUB_TOKEN }}@github.com/Devetak/DiscoDiff.jl.git
 
