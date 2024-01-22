@@ -1,11 +1,4 @@
 using Documenter
-using YourPackageName
+using DiscoDiff
 
-makedocs(
-    sitename = "DiscoDiff.jl",
-    format = Documenter.HTML(),
-    source = "src",
-    pages = ["Home" => "index.md", "Guide" => "guide.md"],
-)
-
-deploydocs(repo = "github.com/Devetak/DiscoDiff.jl.git", branch = "gh-pages")
+makedocs(sitename = "DiscoDiff.jl Documentation", modules = [DiscoDiff])
