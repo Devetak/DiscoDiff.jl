@@ -1,6 +1,34 @@
 # DiscoDiff.jl
 
- A small package for differentiable discontinuities in Julia. 
+ A small package for differentiable discontinuities in Julia. Implements a simple API to generate differentiable discontinuous functions using the pass-through trick.
+
+## Main API
+
+To generate a differentiable function version of a discontinuous function `f` such that the gradient of `f` is the gradient of `g`, simply use:
+
+````julia
+new_f = construct_diff_version(f,g)
+
+````
+
+Note that it is recommended that `g` satisfies the limit:
+
+$$
+\lim_{k \to \infty}g(kx) = f(x).
+$$
+
+
+Use it as:
+
+```julia
+new_f(x)
+# control gradient steppes
+new_f(x, k = 100)
+
+```
+
+Currently supports only scalar to scalar functions.
+
 
 # Heaviside Function Documentation
 
@@ -17,7 +45,7 @@ H(x) = \begin{cases}
 \end{cases}
 $$
 
-We also implement a differentiable version of the the sign function defined as:
+We also implement a differentiable version of the sign function defined as:
 
 $$
 sign(x) = \begin{cases} 
@@ -28,14 +56,14 @@ sign(x) = \begin{cases}
 $$
 
 
-## Differentiable Discontinous functions
+## Differentiable Discontinuous functions
 
 We implement a differentiable version of the Heaviside function, where the derivative is the derivative of the sigmoid. This function has a "steepness" parameter that controls the transition smoothness. The function is `heaviside(x, k)`.
 
 We implement a differentiable version of the sign function, where the derivative is the derivative of tanh. This function has a "steepness" parameter that controls the transition smoothness. The function is `sign_diff(x, k)` to avoid overriding the Base `sign` function.
 
-- `x` : The input to the function.
-- `k` : The steepness parameter. Higher values of `k` makes the sigmoid steeper and hence closer to the discontinous function. Default is 1 in all cases.
+- `x`: The input to the function.
+- `k`: The steepness parameter. Higher values of `k` make the sigmoid steeper and, hence, closer to the discontinuous function. The default is 1 in all cases.
 
 #### Usage
 
