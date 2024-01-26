@@ -27,7 +27,7 @@ new_f(x, k = 100)
 
 ```
 
-Currently supports only scalar to scalar functions.
+Currently supports only scalar to scalar functions. Currently assumes that the discontinuity is at `f(0)` only.
 
 
 # Heaviside Function Documentation
