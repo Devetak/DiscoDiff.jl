@@ -1,6 +1,6 @@
 # DiscoDiff.jl
 
- A small package for differentiable discontinuities in Julia. Implements a simple API to generate differentiable discontinuous functions using the pass-through trick.
+ A small package for differentiable discontinuities in Julia. Implements a simple API to generate differentiable discontinuous functions using the pass-through trick. Works both in forward and reverse mode with scalars and arrays.
 
 ## Main API
 
@@ -8,29 +8,65 @@ To generate a differentiable function version of a discontinuous function `f` su
 
 ````julia
 new_f = construct_diff_version(f,g)
-
 ````
 
-Note that it is recommended that `g` satisfies the limit:
+This is used in the case
 
 $$
-\lim_{k \to \infty}g(kx) = f(x).
+\frac{df}{dx}
 $$
 
+is either not defined or does not have the desired properties. For example where $f$ is the sign function. Sometimes we want to still be able to propagate gradients trough this. In this case we impose
+
+$$
+\frac{df}{dx} = \frac{dg}{dx}
+$$
 
 Use it as:
 
 ```julia
 new_f(x)
 # control gradient steppes
-new_f(x, k = 100)
-
+new_f(2.0, k = 100.0)
 ```
 
-Currently supports only scalar to scalar functions. Currently assumes that the discontinuity is at `f(0)` only.
+In the second case we have
 
+$$
+\frac{df}{dx}(2.0) = \frac{dg}{dx}(100.0 \cdot 2.0)
+$$
 
-# Heaviside Function Documentation
+Note: to avoid type instabilities ensure $x$ and $k$ are of the same type. The package works both with forward and reverse mode automatic differentiation.
+
+````julia
+using Zygote, ForwardDiff
+using DiscoDiff
+using LinearAlgebra
+
+f(x) = 1.0
+g(x) = x
+new_f = construct_diff_version(f,g)
+
+f(1.0) == 1.0
+Zygote.gradient(new_f, 1.0)[1] == 1.0
+ForwardDiff.derivative(new_f, 1.0) == 1.0
+````
+
+And it supports not scalar functions
+
+````julia
+using Zygote, ForwardDiff
+using DiscoDiff
+f = construct_diff_version(x -> x, x -> x.^2)
+x = rand(10)
+f(x) == x
+Zygote.jacobian(f, x)[1] == diagm(2 * x)
+ForwardDiff.jacobian(f, x) == diagm(2 * x)
+````
+
+# Other
+
+We also export to read-made function.
 
 ## Overview
 
@@ -70,14 +106,14 @@ We implement a differentiable version of the sign function, where the derivative
 For the Heaviside function:
 
 ```julia
-heaviside(1.0) == 1.0
-heaviside(1.0, k = 2.0) == 1.0
+heaviside(1.0)
+heaviside(1.0, k = 2.0)
 ```
 
 For the sign function
 
 ```julia
-sign_diff(2.0) == 1.0
+sign_diff(2.0)
 sign_diff(2.0, k = 2.0)
 ```
 
