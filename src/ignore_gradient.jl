@@ -24,7 +24,7 @@ end
 Constructs a pass trough function for the given function `f` and gradient
 function `g`. The pass trough function is a function that returns the same
 value as `f` but the gradient is taken from `g`. Optional parameter k controls
-the steepnes of the gradient, default is 1.
+the steepnes of the gradient, default is 1. Supports both scalars and arrays.
 
 """
 function construct_diff_version(f, g)
@@ -38,7 +38,7 @@ function construct_diff_version(f, g)
                 error("Type not supported only supports Number and AbstractArray.")
             end
         end
-        zero = g(x * k) .- ignore_gradient(g(x * k))
+        zero = g(x .* k) .- ignore_gradient(g(x .* k))
         return ignore_gradient(f(x)) .+ zero
     end
     return pass_trough_function
